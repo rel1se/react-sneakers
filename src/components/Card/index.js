@@ -1,11 +1,8 @@
-
+import styles from './Card.module.css'
 function Card(props){
-    const onClickButton = (event) =>{
-
-    }
     return (
-        <div className="card">
-            <div className="favorite">
+        <div className={styles.card}>
+            <div className={styles.favorite} onClick={props.onFavoriteClick}>
                 <img src="/img/heart.svg" alt="Unliked"/>
             </div>
             <img width={133} height={112} src={props.imageUrl} alt="Sneakers"/>
@@ -15,7 +12,7 @@ function Card(props){
                     <p>Цена: </p>
                     <b>{props.price} руб.</b>
                 </div>
-                <button className="button" onClick={props.onClick}>
+                <button className="button" onClick={props.onPlusClick}>
                     <img width={11} height={11} src="/img/plus.svg"/>
                 </button>
             </div>

@@ -1,8 +1,6 @@
 import Card from './components/Card'
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
-import {logDOM} from "@testing-library/react";
-
 
 const cards = [
     {title: 'Мужские кроссовки Nike Blazer Mid Suede', price: 12999, imageUrl: '/img/sneakers/1.jpg'},
@@ -27,9 +25,10 @@ function App() {
                 <div className="d-flex">
                     {cards.map(obj => (
                         <Card title={obj.title}
-                              price={obj.price}
-                              imageUrl={obj.imageUrl}
-                              onClick={() => console.log(obj) }
+                               price={obj.price}
+                               imageUrl={obj.imageUrl}
+                               onFavoriteClick={() => console.log('Добавили в закладки')}
+                               onPlusClick={() => console.log('Добавили в корзину') }
                         />
                     ))}
                 </div>

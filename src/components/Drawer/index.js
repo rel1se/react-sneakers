@@ -1,11 +1,12 @@
+import styles from './Drawer.module.css'
 function Drawer(props) {
-    return (<div  style={{display:"none"}} className="overlay">
-        <div className="drawer">
+    return (<div style={{display: 'none'}} className={styles.overlay}>
+        <div className={styles.drawer}>
             <h2 className="mb-30 d-flex justify-between">Корзина <img className="removeBtn cu-p"
                                                                       src="/img/btn-remove.svg" alt="Remove"/></h2>
-            <div className="items">
+            <div className={styles.items}>
                 <div className="cartItem d-flex align-center mb-20">
-                    <div style={{backgroundImage: 'url(/img/sneakers/1.jpg'}} className="cartItemImg"></div>
+                    <div style={{backgroundImage: 'url(./public/img/sneakers/1.jpg)'}} className="cartItemImg"></div>
                     <div className="mr-20 flex">
                         <p className="mb-5">Мужские кроссовки Nike Blazer Mid Suede</p>
                         <b>12 999 руб.</b>
@@ -21,7 +22,7 @@ function Drawer(props) {
                     <img className="removeBtn" src="/img/btn-remove.svg" alt="Remove"/>
                 </div>
             </div>
-            <div className="cartTotalBlock">
+            <div className={styles.cartTotalBlock}>
                 <ul>
                     <li>
                         <span>Итого:</span>
