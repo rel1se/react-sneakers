@@ -55,23 +55,7 @@
 .removeBtn:hover{
     opacity: 1;
 }
-.cartTotalBlock ul{
-    display: block;
-    margin-bottom: 30px !important;
-}
-.cartTotalBlock li{
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 20px;
-}
-.cartTotalBlock div{
-    flex: 1;
-    height: 1px;
-    border: 1px dashed #dfdfdf;
-    position: relative;
-    top: -4px;
-    margin: 0 7px;
-}
+
 .greenButton{
     position: relative;
     width: 100%;
@@ -92,4 +76,58 @@
 }
 .greenButton img:hover{
     transform: translateX(5px);
+}
+.cartEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex: 1;
+    text-align: center;
+}
+.cartEmpty p {
+    width: 280px;
+    line-height: 24px;
+}
+
+.cartEmpty .greenButtonClose {
+    position: relative;
+    height: 55px;
+    background: #9dd558;
+    border-radius: 18px;
+    border: 0;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 245px;
+    margin-top: 20px;
+}
+.cartEmpty .greenButtonClose img {
+    position: relative;
+    top: 1px;
+    transform: rotate(180deg);
+    margin-right: 15px;
+    transition: transform 0.15s ease-in-out;
+}
+
+.cartEmpty .greenButtonClose img:hover {
+    transform: rotate(180deg) translateX(3px);
+}
+.cartTotalBlock ul{
+    display: block;
+    margin-bottom: 30px;
+}
+.cartTotalBlock li{
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+.cartTotalBlock div{
+    flex: 1;
+    height: 1px;
+    border: 1px dashed #dfdfdf;
+    position: relative;
+    top: -4px;
+    margin: 0 7px;
 }
