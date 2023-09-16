@@ -1,9 +1,9 @@
 .overlay{
-    position: absolute;
-    left:0;
-    top:0;
-    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     background-color: rgba(0,0,0,0.5);
     z-index: 1;
 }
@@ -72,18 +72,6 @@
     top: -4px;
     margin: 0 7px;
 }
-.cartTotalBlock .greenButton{
-    position: relative;
-}
-.cartTotalBlock .greenButton img{
-    position: absolute;
-    right: 30px;
-    top: 20px;
-    transition: transform 0.15s ease-in-out;
-}
-.cartTotalBlock .greenButton img:hover{
-    transform: translateX(5px);
-}
 .greenButton{
     position: relative;
     width: 100%;
@@ -95,4 +83,13 @@
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
+}
+.greenButton img{
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    transition: transform 0.15s ease-in-out;
+}
+.greenButton img:hover{
+    transform: translateX(5px);
 }
