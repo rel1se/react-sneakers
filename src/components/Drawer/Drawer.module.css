@@ -77,6 +77,10 @@
 .greenButton img:hover{
     transform: translateX(5px);
 }
+.greenButton:disabled{
+    background-color: #bebebe;
+    cursor: default;
+}
 .cartEmpty {
     display: flex;
     align-items: center;
@@ -110,7 +114,6 @@
     margin-right: 15px;
     transition: transform 0.15s ease-in-out;
 }
-
 .cartEmpty .greenButtonClose img:hover {
     transform: rotate(180deg) translateX(3px);
 }
