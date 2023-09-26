@@ -1,12 +1,12 @@
 import styles from './Drawer.module.css'
 import Info from "../Info";
 import React from "react";
-import AppContext from "../../context";
+import {useCart} from "../../hooks/useCart";
 import axios from "axios";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-function Drawer({onClose, onRemove, items = []}) {
-    const {cartItems, setCartItems} = React.useContext(AppContext)
+function Drawer({onClose, onRemove, items = [], opened}) {
+    const {cartItems, setCartItems, totalPrice} = useCart()
     const [orderId, setOrderId] = React.useState(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [isOrderComplete, setIsOrderComplete] = React.useState(false)
@@ -31,7 +31,7 @@ function Drawer({onClose, onRemove, items = []}) {
         setIsLoading(false)
     }
     return (
-        <div className={styles.overlay}>
+        <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
             <div className={styles.drawer}>
                 <h2 className="mb-30 d-flex justify-between">
                     Корзина
@@ -60,12 +60,12 @@ function Drawer({onClose, onRemove, items = []}) {
                                     <li>
                                         <span>Итого:</span>
                                         <div></div>
-                                        <b>21 498 руб. </b>
+                                        <b>{totalPrice} руб. </b>
                                     </li>
                                     <li>
                                         <span>Налог 5%:</span>
                                         <div></div>
-                                        <b>1020 руб. </b>
+                                        <b>{Math.round((totalPrice / 100) * 5)} руб. </b>
                                     </li>
                                     <button disabled={isLoading} onClick={onClickOrder} className={styles.greenButton}>
                                         Оформить заказ <img src="/img/arrow.svg" alt="Arrow"/>
