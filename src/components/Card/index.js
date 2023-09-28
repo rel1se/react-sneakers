@@ -11,7 +11,6 @@ function Card({
                   onPlus,
                   onFavorite,
                   favorited = false,
-                  added = false,
                   loading = false
               }) {
     const {isItemAdded} = React.useContext(AppContext)
@@ -44,9 +43,9 @@ function Card({
                     ) :
                     <>
                         {onFavorite &&
-                            <div className={styles.favorite} onClick={onClickFavorite}>
+                            (<div className={styles.favorite} onClick={onClickFavorite}>
                                 <img src={isFavorite ? '/img/liked.svg' : '/img/unliked.jpg'} alt="Unliked"/>
-                            </div>}
+                            </div>)}
                         <img width="100%" height={135} src={imageUrl} alt="Sneakers"/>
                         <h5>{title}</h5>
                         <div className="d-flex justify-between align-center">
