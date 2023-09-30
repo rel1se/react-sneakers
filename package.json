@@ -2,7 +2,7 @@
   "name": "sneakersshop",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rel1se.github.io/SneakersShop/",
+  "homepage": "https://rel1se.github.io/SneakersShop",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

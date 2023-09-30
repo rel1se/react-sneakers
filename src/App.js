@@ -106,7 +106,7 @@ function App() {
                 <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveItem} opened={cartOpened}/>
                 <Header onClickCart={() => setCartOpened(true)}/>
                 <Routes>
-                    <Route path="/" element={
+                    <Route path="" element={
                         <Home
                             items={items}
                             cartItems={cartItems}
@@ -119,11 +119,11 @@ function App() {
                         />
                     }>
                     </Route>
-                    <Route path="/favorites" element={
+                    <Route path="favorites" element={
                         <Favorites/>
                     }>
                     </Route>
-                    <Route path="/orders" element={
+                    <Route path="orders" element={
                         <Orders/>
                     }>
                     </Route>
