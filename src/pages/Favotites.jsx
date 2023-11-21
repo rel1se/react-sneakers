@@ -11,7 +11,7 @@ function Favorites() {
             </div>
             <div className="d-flex flex-wrap">
                 {favorites.map((item, index) => (
-                    <Card key={index} favorited={true} onFavorite={onAddToFavorite} {...item}/>
+                    <Card key={index} favorite={true} onFavorite={onAddToFavorite} {...item}/>
                 ))}
             </div>
         </div>);

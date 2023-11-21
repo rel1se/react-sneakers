@@ -1,27 +1,33 @@
+import likedImage from "../../assets/img/liked.svg"
+import unlikedImage from "../../assets/img/unliked.jpg"
+import btnChecked from "../../assets/img/btn-checked.svg"
+import btnPlus from "../../assets/img/btn-plus.svg"
+import btnRemove from "../../assets/img/btn-remove.svg"
+import editImg from "../../assets/img/edit.png"
+
 import React from "react";
 import ContentLoader from "react-content-loader";
 import styles from './Card.module.css'
 import AppContext from "../../context";
+import {Link, useNavigate} from "react-router-dom";
 
 function Card({
                   id,
                   title,
                   imageUrl,
                   price,
+                  isAdmin,
                   onPlus,
                   onFavorite,
-                  favorited = false,
                   loading = false
               }) {
-    const {isItemAdded} = React.useContext(AppContext)
-    const [isFavorite, setIsFavorite] = React.useState(favorited)
+    const {isItemAdded, isItemFavorited, onRemoveItem} = React.useContext(AppContext)
     const obj = {id, parentId: id, title, price, imageUrl}
     const onClickPlus = () => {
         onPlus(obj)
     }
     const onClickFavorite = () => {
         onFavorite(obj)
-        setIsFavorite(!isFavorite)
     }
     return (
         <div className={styles.card}>
@@ -43,9 +49,17 @@ function Card({
                     ) :
                     <>
                         {onFavorite &&
-                            (<div className={styles.favorite} onClick={onClickFavorite}>
-                                <img src={isFavorite ? "img/liked.svg" : "img/unliked.jpg"} alt="Unliked"/>
-                            </div>)}
+                            <img className={styles.favorite}
+                                 onClick={onClickFavorite}
+                                 src={isItemFavorited(id) ? likedImage : unlikedImage}
+                                 alt="Unliked"/>
+                        }
+                        {isAdmin &&
+                            <img className={styles.favorite}
+                                 onClick={() => onRemoveItem(obj.id)}
+                                 src={btnRemove}
+                                 alt="Remove"/>
+                        }
                         <img width="100%" height={135} src={imageUrl} alt="Sneakers"/>
                         <h5>{title}</h5>
                         <div className="d-flex justify-between align-center">
@@ -56,9 +70,14 @@ function Card({
                             {onPlus &&
                                 <img className={styles.plus}
                                      onClick={onClickPlus}
-                                     src={isItemAdded(id) ? "img/btn-checked.svg" : "img/btn-plus.svg"}
+                                     src={isItemAdded(id) ? btnChecked : btnPlus}
                                      alt="Plus"
                                 />}
+                            {isAdmin &&
+                                <Link to={`/edit`} state={{ item: obj }}>
+                                    <img className={styles.edit} src={editImg} alt="Edit" />
+                                </Link>
+                            }
                         </div>
                     </>
             }

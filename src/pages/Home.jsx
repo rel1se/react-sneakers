@@ -1,3 +1,6 @@
+import searchImg from "../assets/img/search.svg"
+import btnRemoveImg from "../assets/img/btn-remove.svg"
+
 import Card from "../components/Card";
 import React from "react";
 
@@ -9,8 +12,8 @@ function Home({
                   onAddToCart,
                   onAddToFavorite,
                   isLoading
-              })
-{
+              }) {
+
     const renderItems = () => {
         const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
         return (isLoading ? [...Array(10)] : filteredItems).map((item, index) => (
@@ -22,14 +25,15 @@ function Home({
                 />
             )
         )
+
     }
     return (<div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
             <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : 'Все кроссовки'}</h1>
             <div className="searchBlock d-flex">
-                <img src="img/search.svg" alt="Search"/>
+                <img src={searchImg} alt="Search"/>
                 {searchValue &&
-                    <img onClick={() => setSearchValue('')} className="clear cu-p" src="img/btn-remove.svg"
+                    <img onClick={() => setSearchValue('')} className="clear cu-p" src={btnRemoveImg}
                          alt="Clear"/>}
                 <input onChange={onChangeSearchInput} value={searchValue} placeholder="Поиск"/>
             </div>
