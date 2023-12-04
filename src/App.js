@@ -10,8 +10,9 @@ import Profile from "./pages/Profile";
 import Registration from "./components/Registration";
 import Admin from "./components/Admin";
 import Login from "./pages/Login";
-import PrivateRoute from "./pages/PrivateRoute";
 import Edit from "./pages/Edit";
+import NotFound from "./pages/NotFound";
+
 
 function App() {
     const [items, setItems] = React.useState([])
@@ -20,40 +21,61 @@ function App() {
     const [cartOpened, setCartOpened] = React.useState(false)
     const [searchValue, setSearchValue] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(true)
-    const [userId, setUserId] = React.useState(1)
+    const [user, setUser] = React.useState({})
+
 
     React.useEffect(() => {
-        async function fetchData() {
+
+        const fetchData = async (user) => {
             try {
-                const [cartResponse, favoritesResponse, itemsResponse] = await Promise.all([
-                    axios.get(`http://localhost:8088/cart?userId=${userId}`),
-                    axios.get(`http://localhost:8088/favorites?userId=${userId}`),
-                    axios.get("http://localhost:8088/sneakers/all")
-                ])
-                setIsLoading(false)
-                setCartItems(cartResponse.data)
-                setFavorites(favoritesResponse.data)
+                const itemsResponse = await axios.get('http://localhost:8088/sneakers/all')
                 setItems(itemsResponse.data)
-            }
-            catch(error){
+                if (user === undefined){
+                    const [cartResponse, favoritesResponse] = await Promise.all([
+                        axios.get(`http://localhost:8088/cart?userId=${user.id}`),
+                        axios.get(`http://localhost:8088/favorites?userId=${user.id}`)
+                    ]);
+                    setCartItems(cartResponse.data);
+                    setFavorites(favoritesResponse.data);
+                }
+                setIsLoading(false)
+            } catch (error) {
                 alert('Ошибка при запросе данных ;(');
-                console.error(error)
+                console.error(error);
+            }
+        };
+        fetchData(user)
+    }, [user])
+    React.useEffect(() => {
+        const fetchUserData = async () => {
+            const jwt = localStorage.getItem('jwt');
+            if (!jwt) {
+                return;
+            }
+            const response = await axios.get(`http://localhost:8088/auth/users?jwt=${jwt}`)
+            const userData = await response.data;
+            localStorage.setItem('user', userData)
+            setUser(userData)
+            if (response.status === 200) {
+                console.log('Получены данные пользователя:', userData);
+            } else {
+                alert("Ошибка при получений данных пользователя")
             }
         }
-        fetchData()
+        fetchUserData()
     }, [])
     const onAddToCart = async (obj) => {
-        try{
+        try {
             const findItem = cartItems.find((item) => Number(item.id) === Number(obj.id))
             if (findItem) {
                 setCartItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
-                await axios.delete(`http://localhost:8088/cart?userId=${userId}&sneakerId=${findItem.id}`)
+                await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${findItem.id}`)
             } else {
                 setCartItems(prev => [...prev, obj])
-                const {data} = await axios.post(`http://localhost:8088/cart?userId=${userId}`, obj)
+                const {data} = await axios.post(`http://localhost:8088/cart?userId=${user.id}`, obj)
                 setCartItems(prev => prev.map(item => {
-                    if (item.id === data.id){
-                        return{
+                    if (item.id === data.id) {
+                        return {
                             ...item,
                             id: data.id
                         }
@@ -61,26 +83,24 @@ function App() {
                     return item
                 }))
             }
-        }
-        catch (error){
+        } catch (error) {
             alert('Ошибка при добавлении в корзину')
             console.error(error)
         }
     }
 
     const onAddToFavorite = async (obj) => {
-        try{
+        try {
             const findItem = favorites.find(favObj => Number(favObj.id) === Number(obj.id))
             if (findItem) {
                 setFavorites((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)))
-                await axios.delete(`http://localhost:8088/favorites?userId=${userId}&sneakerId=${obj.id}`)
-            }
-            else {
+                await axios.delete(`http://localhost:8088/favorites?userId=${user.id}&sneakerId=${obj.id}`)
+            } else {
                 setFavorites(prev => [...prev, obj])
-                const {data} = await axios.post(`http://localhost:8088/favorites?userId=${userId}`, obj)
+                const {data} = await axios.post(`http://localhost:8088/favorites?userId=${user.id}`, obj)
                 setFavorites(prev => prev.map(item => {
-                    if (item.id === data.id){
-                        return{
+                    if (item.id === data.id) {
+                        return {
                             ...item,
                             id: data.id
                         }
@@ -88,27 +108,25 @@ function App() {
                     return item
                 }))
             }
-        } catch (error){
+        } catch (error) {
             alert('Не удалось добавить в избранное')
             console.error(error)
         }
     }
     const onRemoveFromCart = async (id) => {
-        try{
-            await axios.delete(`http://localhost:8088/cart?userId=${userId}&sneakerId=${id}`)
+        try {
+            await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${id}`)
             setCartItems(prev => prev.filter(item => Number(item.id) !== Number(id)))
-        }
-        catch (error){
+        } catch (error) {
             alert('Ошибка при удалении из корзины')
             console.error(error)
         }
     }
     const onRemoveItem = async (id) => {
-        try{
+        try {
             await axios.delete(`http://localhost:8088/sneakers?sneakerId=${id}`)
             setItems(prev => prev.filter(item => Number(item.id) !== Number(id)))
-        }
-        catch (error){
+        } catch (error) {
             alert('Ошибка при удалении товара')
             console.error(error)
         }
@@ -117,8 +135,7 @@ function App() {
         try {
             await axios.put(`http://localhost:8088/sneakers?sneakerId=${obj.id}`, obj)
             setItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
-        }
-        catch (error){
+        } catch (error) {
             alert('Ошибка при редактировании товара')
             console.error(error)
         }
@@ -144,46 +161,45 @@ function App() {
             onAddToFavorite,
             setCartOpened,
             setCartItems,
-            userId,
-            setUserId,
             onRemoveItem,
-            onEditItem
+            onEditItem,
+            user,
+            setUser
         }}>
             <div className="wrapper clear">
-                <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveFromCart} opened={cartOpened}/>
+                <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveFromCart}
+                        opened={cartOpened}/>
                 <Header onClickCart={() => setCartOpened(true)}/>
                 <Routes>
-                    <Route element={<PrivateRoute/>}>
-                        <Route path="" element={
-                            <Home
-                                items={items}
-                                cartItems={cartItems}
-                                searchValue={searchValue}
-                                setSearchValue={setSearchValue}
-                                onChangeSearchInput={onChangeSearchInput}
-                                onAddToFavorite={onAddToFavorite}
-                                onAddToCart={onAddToCart}
-                                onRemoveItem={onRemoveItem}
-                                isLoading={isLoading}
-                            />
-                        }>
-                        </Route>
-                        <Route path="favorites" element={
-                            <Favorites/>
-                        }>
-                        </Route>
-                        <Route path="orders" element={
-                            <Profile/>
-                        }>
-                        </Route>
-                        <Route path="admin" element={
-                            <Admin/>
-                        }>
-                        </Route>
-                        <Route path="edit" element={
-                            <Edit/>
-                        }>
-                        </Route>
+                    <Route path="" element={
+                        <Home
+                            items={items}
+                            cartItems={cartItems}
+                            searchValue={searchValue}
+                            setSearchValue={setSearchValue}
+                            onChangeSearchInput={onChangeSearchInput}
+                            onAddToFavorite={onAddToFavorite}
+                            onAddToCart={onAddToCart}
+                            onRemoveItem={onRemoveItem}
+                            isLoading={isLoading}
+                        />
+                    }>
+                    </Route>
+                    <Route path="favorites" element={
+                        <Favorites/>
+                    }>
+                    </Route>
+                    <Route path="profile" element={
+                        <Profile/>
+                    }>
+                    </Route>
+                    <Route path="admin" element={
+                        <Admin/>
+                    }>
+                    </Route>
+                    <Route path="edit" element={
+                        <Edit/>
+                    }>
                     </Route>
                     <Route path="registration" element={
                         <Registration/>
@@ -193,10 +209,15 @@ function App() {
                         <Login/>
                     }>
                     </Route>
+                    <Route path="*" element={
+                        <NotFound/>
+                    }>
+                    </Route>
                 </Routes>
             </div>
         </AppContext.Provider>
     )
 }
+
 
 export default App;

@@ -1,15 +1,31 @@
 import React from "react";
 import Card from "../components/Card";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import AppContext from "../context";
 
 function Profile() {
-    const {items, userId} = React.useContext(AppContext)
+    const {items, user} = React.useContext(AppContext)
+    const navigate = useNavigate()
     const [orders, setOrders] = React.useState([])
     const [isLoading, setIsLoading] = React.useState(true)
-    const [isAdmin, setIsAdmin] = React.useState(true)
+    const [isAdmin, setIsAdmin] = React.useState(false)
     const editItems = isAdmin && items.length > 0
+
+    React.useEffect(() => {
+        if (user.role === 'ADMIN')
+            setIsAdmin(true)
+    }, [])
+    const onExit = async () => {
+        try{
+            localStorage.removeItem('jwt')
+            localStorage.removeItem('user')
+            navigate("/")
+        }
+        catch (error){
+            alert(error.response);
+        }
+    }
     React.useEffect(() => {
         (async () => {
             try {
@@ -26,16 +42,13 @@ function Profile() {
         <div className="content p-40">
             <div className="d-flex align-center justify-between">
                 <div className="mb-20">
-                    <h1>Профиль rel1segod</h1>
+                    <h1>Профиль пользователя {user.email}</h1>
                 </div>
-                {isAdmin &&
-                    <div className="d-flex align-center justify-center">
-                        <Link to="/admin">
-                            <button className="greenButtonClose">
-                                Добавить товары
-                            </button>
-                        </Link>
-                    </div>}
+                <div className="d-flex align-center justify-center">
+                    <button className="greenButtonClose" onClick={onExit}>
+                        Выйти из аккаунта
+                    </button>
+                </div>
             </div>
             {orders.length !== 0 && <>
                 <div className="d-flex align-center justify-between mb-40">
@@ -55,6 +68,14 @@ function Profile() {
                 editItems && (<>
                         <div className="d-flex align-center justify-between mb-40">
                             <h1>Редактировать товары</h1>
+                            {isAdmin &&
+                                <div className="d-flex align-center justify-center">
+                                    <Link to="/admin">
+                                        <button className="greenButtonClose">
+                                            Добавить товары
+                                        </button>
+                                    </Link>
+                                </div>}
                         </div>
                         <div className="d-flex flex-wrap">
                             {(isLoading ? [...Array(10)] : items).map((item, index) => (

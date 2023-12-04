@@ -7,28 +7,27 @@ import React from "react";
 import {useCart} from "../../hooks/useCart";
 import axios from "axios";
 import AppContext from "../../context";
-import {logDOM} from "@testing-library/react";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 function Drawer({onClose, onRemove, items = [], opened}) {
+    const {user} = React.useContext(AppContext)
     const {cartItems, setCartItems, totalPrice} = useCart()
     const [orderId, setOrderId] = React.useState(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [isOrderComplete, setIsOrderComplete] = React.useState(false)
-    const {userId} = React.useContext(AppContext)
     const onClickOrder = async () => {
         try{
             setIsLoading(true)
             const {data} = await axios.post(`https://6501dcae736d26322f5c672c.mockapi.io/orders`,
                 {sneakers: cartItems})
             console.log(data)
-            await axios.delete(`http://localhost:8088/cart/all?userId=${userId}`, [])
+            await axios.delete(`http://localhost:8088/cart/all?userId=${user.id}`, [])
             setOrderId(data.id)
             setIsOrderComplete(true)
             setCartItems([])
             for (let  i= 0; i < cartItems.length; i++){
                 const item = cartItems[i]
-                await axios.delete(`http://localhost:8088/cart?userId=${userId}&sneakerId=${item.id}`)
+                await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${item.id}`)
                 await delay(500)
             }
         }catch(error){

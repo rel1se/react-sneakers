@@ -3,14 +3,12 @@ import axios from "axios";
 import {useForm} from "react-hook-form";
 
 import styles from '../components/Registration/Registration.module.css'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
-
-const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
-const PHONE_NUMBER_REGEXP = /^[\d\+][\d\(\)\ -]{4,14}\d$/;
 
 const Login = () => {
 
+    const navigate = useNavigate()
     const {
         register,
         handleSubmit,
@@ -19,16 +17,26 @@ const Login = () => {
     } = useForm({
         mode: "onChange",
     })
+    async function authenticateUser(obj) {
+        const response = await axios.post('http://localhost:8088/auth/login', obj);
 
+        const data = await response.data;
+        if (response.status === 200) {
+            localStorage.setItem('jwt', data.jwt);
+        } else {
+            alert("Неверные данные пользователя")
+        }
+    }
     const onSubmit = async obj => {
         try{
-            await axios.post("http://localhost:8088/users", obj)
-        }
-        catch (error){
-            alert(error.response.data)
+            authenticateUser(obj)
+            navigate("/")
+        } catch (error){
+            console.error(error)
+            alert(error)
         }
         reset()
-    }
+    };
     return (
         <div className={styles.registrationContainer}>
             <h2>Войдите в аккаунт React Sneakers</h2>
@@ -39,7 +47,7 @@ const Login = () => {
                        placeholder="Электронная почта"
                 />
                 {errors?.email && (
-                    <div>
+                    <div className={styles.error}>
                         {errors.email.message}
                     </div>
                 )}
@@ -49,13 +57,12 @@ const Login = () => {
                        placeholder="Пароль"
                 />
                 {errors?.password && (
-                    <div>
+                    <div className={styles.error}>
                         {errors.password.message}
                     </div>
                 )}
-                <Link to="">
-                    <button>Отправить</button>
-                </Link>
+                <p className={styles.registrationLink}>Еще нет аккаунта React Sneakers? <Link style={{color: "red"}} to="/registration">Зарегестрируйтесь</Link></p>
+                <button>Войти</button>
             </form>
         </div>
     );

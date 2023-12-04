@@ -21,8 +21,8 @@ function Card({
                   onFavorite,
                   loading = false
               }) {
-    const {isItemAdded, isItemFavorited, onRemoveItem} = React.useContext(AppContext)
-    const obj = {id, parentId: id, title, price, imageUrl}
+    const {isItemAdded, isItemFavorited, onRemoveItem, user} = React.useContext(AppContext)
+    const obj = {id, title, price, imageUrl}
     const onClickPlus = () => {
         onPlus(obj)
     }
@@ -48,11 +48,11 @@ function Card({
                         </ContentLoader>
                     ) :
                     <>
-                        {onFavorite &&
+                        {onFavorite && (Object.entries(user).length !== 0) ?
                             <img className={styles.favorite}
                                  onClick={onClickFavorite}
                                  src={isItemFavorited(id) ? likedImage : unlikedImage}
-                                 alt="Unliked"/>
+                                 alt="Unliked"/> : <></>
                         }
                         {isAdmin &&
                             <img className={styles.favorite}
@@ -67,12 +67,14 @@ function Card({
                                 <p>Цена: </p>
                                 <b>{price} руб.</b>
                             </div>
-                            {onPlus &&
-                                <img className={styles.plus}
-                                     onClick={onClickPlus}
-                                     src={isItemAdded(id) ? btnChecked : btnPlus}
-                                     alt="Plus"
-                                />}
+                            {onPlus && (Object.entries(user).length !== 0) ? (
+                                <img
+                                    className={styles.plus}
+                                    onClick={onClickPlus}
+                                    src={isItemAdded(id) ? btnChecked : btnPlus}
+                                    alt="Plus"
+                                />
+                            ) : <></>}
                             {isAdmin &&
                                 <Link to={`/edit`} state={{ item: obj }}>
                                     <img className={styles.edit} src={editImg} alt="Edit" />
