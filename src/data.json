@@ -3,61 +3,60 @@
     "id": "1",
     "title": "Мужские кроссовки Nike Blazer Mid Suede",
     "price": 12999,
-    "imageUrl": "img/1.jpg"
+    "imageUrl": "https://i.postimg.cc/K8TPRQL4/1.jpg"
   },
   {
     "id": "2",
     "title": "Мужские кроссовки Nike Air Max 270 Air Oracle Aqua",
     "price": 12999,
-    "imageUrl": "img/2.jpg"
+    "imageUrl": "https://i.postimg.cc/SsSC1hPz/2.jpg"
   },
   {
     "id": "3",
     "title": "Мужские кроссовки Nike Blazer Mid Suede",
     "price": 8499,
-    "imageUrl": "img/3.jpg"
+    "imageUrl": "https://i.postimg.cc/3wC2ZRtT/3.jpg"
   },
   {
     "id": "4",
     "title": "Мужские кроссовки Puma X Aka Boku Future Rider",
     "price": 8999,
-    "imageUrl": "img/4.jpg"
+    "imageUrl": "https://i.postimg.cc/MT9RhLk3/4.jpg"
   },
   {
     "id": "5",
     "title": "Мужские кроссовки Under Armour Curry 8",
     "price": 15199,
-    "imageUrl": "img/5.jpg"
+    "imageUrl": "https://i.postimg.cc/5NhvdvGJ/5.jpg"
   },
   {
     "id": "6",
     "title": "Мужские кроссовки Nike Kyrie 7",
     "price": 11299,
-    "imageUrl": "img/6.jpg"
+    "imageUrl": "https://i.postimg.cc/4yMc3hxz/6.jpg"
   },
   {
     "id": "7",
     "title": "Мужские кроссовки Nike Jordan Air Jordan 11",
     "price": 10799,
-    "imageUrl": "./img/7.jpg"
+    "imageUrl": "https://i.postimg.cc/yxW9BTs1/7.jpg"
   },
   {
     "id": "8",
     "title": "Мужские кроссовки Nike LeBron XVIII",
     "price": 16499,
-    "imageUrl": "img/8.jpg"
+    "imageUrl": "https://i.postimg.cc/bYFkg49s/8.jpg"
   },
   {
     "id": "9",
     "title": "Мужские кроссовки Nike LeBron XVIII Low",
     "price": 13999,
-    "imageUrl": "img/9.jpg"
+    "imageUrl": "https://i.postimg.cc/wTyJGFwF/9.jpg"
   },
   {
     "id": "10",
     "title": "Мужские кроссовки Nike Kyrie Flytrap IV",
     "price": 11299,
-    "imageUrl": "img/10.jpg"
+    "imageUrl": "https://i.postimg.cc/Bn2Fqb9K/10.jpg"
   }
 ]
-
