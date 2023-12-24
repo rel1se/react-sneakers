@@ -23,7 +23,6 @@ const Registration = () => {
 
     async function registerUser(obj) {
         const response = await axios.post('http://localhost:8088/auth/register', obj);
-
         const data = await response.data;
         if (response.status === 200) {
             localStorage.setItem('jwt', data.jwt);
@@ -33,7 +32,6 @@ const Registration = () => {
     }
 
     const onSubmit = async obj => {
-
         try {
             registerUser(obj)
             navigate("/");

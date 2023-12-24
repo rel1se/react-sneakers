@@ -4,11 +4,13 @@ import {useForm} from "react-hook-form";
 
 import styles from '../components/Registration/Registration.module.css'
 import {useLocation, useNavigate} from "react-router-dom";
+import AppContext from "../context";
 
 
 const Edit = () => {
     const location = useLocation();
     const { item } = location.state || {};
+    const {items, setItems} = React.useContext(AppContext)
     const navigate = useNavigate()
     const {
         register,
@@ -22,6 +24,8 @@ const Edit = () => {
     const onSubmit = async (obj) => {
         try{
             await axios.put(`http://localhost:8088/sneakers?sneakerId=${item.id}`, obj)
+            console.log(item)
+            console.log(obj)
             navigate("/")
         }
         catch (error){

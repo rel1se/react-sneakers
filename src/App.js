@@ -1,5 +1,5 @@
 import React from 'react'
-import {Route, Routes} from 'react-router-dom'
+import {json, Route, Routes} from 'react-router-dom'
 import axios from "axios";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
@@ -23,14 +23,15 @@ function App() {
     const [isLoading, setIsLoading] = React.useState(true)
     const [user, setUser] = React.useState({})
 
-
     React.useEffect(() => {
 
+    }, [])
+    React.useEffect(() => {
         const fetchData = async (user) => {
             try {
                 const itemsResponse = await axios.get('http://localhost:8088/sneakers/all')
                 setItems(itemsResponse.data)
-                if (user === undefined){
+                if (JSON.stringify(user) !== '{}'){
                     const [cartResponse, favoritesResponse] = await Promise.all([
                         axios.get(`http://localhost:8088/cart?userId=${user.id}`),
                         axios.get(`http://localhost:8088/favorites?userId=${user.id}`)
@@ -44,11 +45,13 @@ function App() {
                 console.error(error);
             }
         };
+        console.log(user)
         fetchData(user)
     }, [user])
     React.useEffect(() => {
-        const fetchUserData = async () => {
-            const jwt = localStorage.getItem('jwt');
+        const jwt = localStorage.getItem('jwt');
+        const fetchUserData = async (jwt) => {
+
             if (!jwt) {
                 return;
             }
@@ -62,7 +65,7 @@ function App() {
                 alert("Ошибка при получений данных пользователя")
             }
         }
-        fetchUserData()
+        fetchUserData(jwt)
     }, [])
     const onAddToCart = async (obj) => {
         try {
@@ -164,7 +167,8 @@ function App() {
             onRemoveItem,
             onEditItem,
             user,
-            setUser
+            setUser,
+            setItems
         }}>
             <div className="wrapper clear">
                 <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveFromCart}

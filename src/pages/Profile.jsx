@@ -5,7 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import AppContext from "../context";
 
 function Profile() {
-    const {items, user} = React.useContext(AppContext)
+    const {items, user, setUser} = React.useContext(AppContext)
     const navigate = useNavigate()
     const [orders, setOrders] = React.useState([])
     const [isLoading, setIsLoading] = React.useState(true)
@@ -20,6 +20,7 @@ function Profile() {
         try{
             localStorage.removeItem('jwt')
             localStorage.removeItem('user')
+            setUser({})
             navigate("/")
         }
         catch (error){

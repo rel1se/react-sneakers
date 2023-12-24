@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
@@ -17,9 +17,8 @@ const Login = () => {
     } = useForm({
         mode: "onChange",
     })
-    async function authenticateUser(obj) {
+    const authenticateUser  = async (obj) => {
         const response = await axios.post('http://localhost:8088/auth/login', obj);
-
         const data = await response.data;
         if (response.status === 200) {
             localStorage.setItem('jwt', data.jwt);
