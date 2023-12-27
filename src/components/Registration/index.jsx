@@ -2,9 +2,8 @@ import React from 'react';
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
-import styles from './Registration.module.css'
+import styles from './Registration.module.scss'
 import {useNavigate} from "react-router-dom";
-import AppContext from "../../context";
 
 
 const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;

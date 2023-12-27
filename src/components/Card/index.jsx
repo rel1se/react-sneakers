@@ -7,9 +7,9 @@ import editImg from "../../assets/img/edit.png"
 
 import React from "react";
 import ContentLoader from "react-content-loader";
-import styles from './Card.module.css'
+import styles from './Card.module.scss'
 import AppContext from "../../context";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 function Card({
                   id,

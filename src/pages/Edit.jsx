@@ -2,15 +2,13 @@ import React from 'react';
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
-import styles from '../components/Registration/Registration.module.css'
+import styles from '../components/Registration/Registration.module.scss'
 import {useLocation, useNavigate} from "react-router-dom";
-import AppContext from "../context";
 
 
 const Edit = () => {
     const location = useLocation();
     const { item } = location.state || {};
-    const {items, setItems} = React.useContext(AppContext)
     const navigate = useNavigate()
     const {
         register,

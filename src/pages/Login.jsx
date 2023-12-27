@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
-import styles from '../components/Registration/Registration.module.css'
+import styles from '../components/Registration/Registration.module.scss'
 import {Link, useNavigate} from "react-router-dom";
 
 

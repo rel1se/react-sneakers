@@ -1,7 +1,7 @@
 import arrowImg from "../assets/img/arrow.svg"
 
 import React from "react";
-import styles from "./Drawer/Drawer.module.css";
+import styles from "./Drawer/Drawer.module.scss";
 import AppContext from "../context";
 import completeOrderImg from '../assets/img/complete-order.jpg'
 import emptyCartImg from "../assets/img/empty-cart.jpg"

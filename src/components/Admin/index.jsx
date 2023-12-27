@@ -2,7 +2,7 @@ import React from 'react';
 import axios from "axios";
 import {useForm} from "react-hook-form";
 
-import styles from '../Registration/Registration.module.css'
+import styles from '../Registration/Registration.module.scss'
 
 
 const Admin = () => {

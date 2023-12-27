@@ -14,9 +14,10 @@
 .overlayVisible{
     visibility: visible;
     opacity: 1;
-}
-.overlayVisible .drawer{
-    transform: translateX(0);
+
+    .drawer {
+        transform: translateX(0);
+    }
 }
 .drawer{
     display: flex;
@@ -30,6 +31,10 @@
     padding: 30px;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
+
+    h2{
+        margin:0;
+    }
 }
 .drawer h2{
     margin:0;
@@ -44,6 +49,15 @@
     border-radius: 20px;
     overflow: hidden;
     padding: 20px;
+
+    p{
+        font-size: 16px;
+        margin: 0;
+    }
+
+    b{
+        font-size: 14px;
+    }
 }
 .cartItemImg{
     height: 70px;
@@ -53,20 +67,15 @@
     background-repeat: no-repeat;
     margin-right: 20px;
 }
-.cartItem p{
-    font-size: 16px;
-    margin: 0;
-}
-.cartItem b{
-    font-size: 14px;
-}
+
 .removeBtn{
     opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.2s ease-in-out;
-}
-.removeBtn:hover{
-    opacity: 1;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .greenButton{
@@ -80,19 +89,22 @@
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-}
-.greenButton img{
-    position: absolute;
-    right: 30px;
-    top: 20px;
-    transition: transform 0.15s ease-in-out;
-}
-.greenButton img:hover{
-    transform: translateX(5px);
-}
-.greenButton:disabled{
-    background-color: #bebebe;
-    cursor: default;
+
+    img{
+        position: absolute;
+        right: 30px;
+        top: 20px;
+        transition: transform 0.15s ease-in-out;
+    }
+
+    img:hover{
+        transform: translateX(5px);
+    }
+
+    &:disabled{
+        background-color: #bebebe;
+        cursor: default;
+    }
 }
 .cartEmpty {
     display: flex;
@@ -101,49 +113,54 @@
     flex-direction: column;
     flex: 1;
     text-align: center;
-}
-.cartEmpty p {
-    width: 280px;
-    line-height: 24px;
+
+    p {
+        width: 280px;
+        line-height: 24px;
+    }
+
+    .greenButtonClose {
+        position: relative;
+        height: 55px;
+        background: #9dd558;
+        border-radius: 18px;
+        border: 0;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 245px;
+        margin-top: 20px;
+    }
+    .greenButtonClose img {
+        position: relative;
+        top: 1px;
+        transform: rotate(180deg);
+        margin-right: 15px;
+        transition: transform 0.15s ease-in-out;
+    }
+    .greenButtonClose img:hover {
+        transform: rotate(180deg) translateX(3px);
+    }
 }
 
-.cartEmpty .greenButtonClose {
-    position: relative;
-    height: 55px;
-    background: #9dd558;
-    border-radius: 18px;
-    border: 0;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    width: 245px;
-    margin-top: 20px;
-}
-.cartEmpty .greenButtonClose img {
-    position: relative;
-    top: 1px;
-    transform: rotate(180deg);
-    margin-right: 15px;
-    transition: transform 0.15s ease-in-out;
-}
-.cartEmpty .greenButtonClose img:hover {
-    transform: rotate(180deg) translateX(3px);
-}
+
 .cartTotalBlock ul{
     display: block;
     margin-bottom: 30px;
-}
-.cartTotalBlock li{
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 20px;
-}
-.cartTotalBlock div{
-    flex: 1;
-    height: 1px;
-    border: 1px dashed #dfdfdf;
-    position: relative;
-    top: -4px;
-    margin: 0 7px;
+
+    li{
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 20px;
+    }
+
+    div{
+        flex: 1;
+        height: 1px;
+        border: 1px dashed #dfdfdf;
+        position: relative;
+        top: -4px;
+        margin: 0 7px;
+    }
 }

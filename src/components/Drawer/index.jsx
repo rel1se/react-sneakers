@@ -1,7 +1,7 @@
 import btnRemove from "../../assets/img/btn-remove.svg"
 import arrowImg from "../../assets/img/arrow.svg"
 
-import styles from './Drawer.module.css'
+import styles from './Drawer.module.scss'
 import Info from "../Info";
 import React from "react";
 import {useCart} from "../../hooks/useCart";
