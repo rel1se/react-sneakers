@@ -3,8 +3,8 @@ import arrowImg from "../assets/img/arrow.svg"
 import React from "react";
 import styles from "./Drawer/Drawer.module.scss";
 import AppContext from "../context";
-import completeOrderImg from '../assets/img/complete-order.jpg'
-import emptyCartImg from "../assets/img/empty-cart.jpg"
+import completeOrderImg from '../../public/img/complete-order.jpg'
+import emptyCartImg from "../../public/img/empty-cart.jpg"
 
 const Info = ({image, title, description, }) => {
     const {setCartOpened} = React.useContext(AppContext)

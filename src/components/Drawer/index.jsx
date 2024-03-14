@@ -2,13 +2,15 @@ import btnRemove from "../../assets/img/btn-remove.svg"
 import arrowImg from "../../assets/img/arrow.svg"
 
 import styles from './Drawer.module.scss'
-import Info from "../Info";
+
 import React from "react";
 import {useCart} from "../../hooks/useCart";
 import axios from "axios";
 import AppContext from "../../context";
+import InfoPage from "../InfoPage";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 function Drawer({onClose, onRemove, items = [], opened}) {
     const {user} = React.useContext(AppContext)
     const {cartItems, setCartItems, totalPrice} = useCart()
@@ -16,21 +18,21 @@ function Drawer({onClose, onRemove, items = [], opened}) {
     const [isLoading, setIsLoading] = React.useState(false)
     const [isOrderComplete, setIsOrderComplete] = React.useState(false)
     const onClickOrder = async () => {
-        try{
+        try {
             setIsLoading(true)
-            const {data} = await axios.post(`https://6501dcae736d26322f5c672c.mockapi.io/orders`,
+            const {data} = await axios.post(`https://ac15aa85171c1f7c.mokky.dev/orders`,
                 {sneakers: cartItems})
             console.log(data)
-            await axios.delete(`http://localhost:8088/cart/all?userId=${user.id}`, [])
+            await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart`, [])
             setOrderId(data.id)
             setIsOrderComplete(true)
             setCartItems([])
-            for (let  i= 0; i < cartItems.length; i++){
+            for (let i = 0; i < cartItems.length; i++) {
                 const item = cartItems[i]
-                await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${item.id}`)
+                await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${item.id}`)
                 await delay(500)
             }
-        }catch(error){
+        } catch (error) {
             alert("Не удалось создать заказ :(")
         }
         setIsLoading(false)
@@ -78,9 +80,20 @@ function Drawer({onClose, onRemove, items = [], opened}) {
                                 </ul>
                             </div>
                         </div> : (
-                        <Info title={isOrderComplete ? "Заказ оформлен" : "Корзина пустая"}
-                              description={isOrderComplete ? `Ваш заказ №${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы один товар, чтобы сделать заказ"}
-                              image={isOrderComplete ? true : false}/>
+                            <div style={{display: "flex", justifyContent: 'center', alignItems: 'center', marginTop: "16rem"}}>
+                                {isOrderComplete ?
+
+                                    <InfoPage
+                                        imageUrl='/img/complete-cart.jpg'
+                                        title="Заказ оформлен"
+                                        description={`Ваш заказ №${orderId} скоро будет передан курьерской доставке`}/> :
+                                    <InfoPage
+                                        imageUrl='/img/empty-cart.jpg'
+                                        title="Корзина пустая"
+                                        description={`Добавьте хотя бы один товар, чтобы сделать заказ`}
+                                    />}
+
+                            </div>
                         )
                 }
             </div>

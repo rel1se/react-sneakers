@@ -1,17 +1,13 @@
 import React from 'react'
-import {json, Route, Routes} from 'react-router-dom'
+import {Route, Routes} from 'react-router-dom'
 import axios from "axios";
-import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 import Home from "./pages/Home"
 import Favorites from "./pages/Favotites";
 import AppContext from "./context";
 import Profile from "./pages/Profile";
-import Registration from "./components/Registration";
-import Admin from "./components/Admin";
-import Login from "./pages/Login";
-import Edit from "./pages/Edit";
 import NotFound from "./pages/NotFound";
+import MainLayout from "./layouts/MainLayout";
 
 
 function App() {
@@ -21,63 +17,38 @@ function App() {
     const [cartOpened, setCartOpened] = React.useState(false)
     const [searchValue, setSearchValue] = React.useState('')
     const [isLoading, setIsLoading] = React.useState(true)
-    const [user, setUser] = React.useState({})
+
+
 
     React.useEffect(() => {
-
-    }, [])
-    React.useEffect(() => {
-        const fetchData = async (user) => {
+        const fetchData = async () => {
             try {
-                const itemsResponse = await axios.get('http://localhost:8088/sneakers/all')
+                const [itemsResponse, cartResponse, favoritesResponse] = await Promise.all([
+                    axios.get('https://ac15aa85171c1f7c.mokky.dev/sneakers'),
+                    axios.get(`https://ac15aa85171c1f7c.mokky.dev/cart`),
+                    axios.get('https://ac15aa85171c1f7c.mokky.dev/favorites')
+                ]);
                 setItems(itemsResponse.data)
-                if (JSON.stringify(user) !== '{}'){
-                    const [cartResponse, favoritesResponse] = await Promise.all([
-                        axios.get(`http://localhost:8088/cart?userId=${user.id}`),
-                        axios.get(`http://localhost:8088/favorites?userId=${user.id}`)
-                    ]);
-                    setCartItems(cartResponse.data);
-                    setFavorites(favoritesResponse.data);
-                }
-                setIsLoading(false)
+                setCartItems(cartResponse.data);
+                setFavorites(favoritesResponse.data);
+                setIsLoading(false);
             } catch (error) {
-                alert('Ошибка при запросе данных ;(');
-                console.error(error);
+                console.log('Ошибка при запросе данных ;(');
             }
         };
-        console.log(user)
-        fetchData(user)
-    }, [user])
-    React.useEffect(() => {
-        const jwt = localStorage.getItem('jwt');
-        const fetchUserData = async (jwt) => {
-
-            if (!jwt) {
-                return;
-            }
-            const response = await axios.get(`http://localhost:8088/auth/users?jwt=${jwt}`)
-            const userData = await response.data;
-            localStorage.setItem('user', userData)
-            setUser(userData)
-            if (response.status === 200) {
-                console.log('Получены данные пользователя:', userData);
-            } else {
-                alert("Ошибка при получений данных пользователя")
-            }
-        }
-        fetchUserData(jwt)
+        fetchData()
     }, [])
-    const onAddToCart = async (obj) => {
+    const onAddToCart = async (sneaker) => {
         try {
-            const findItem = cartItems.find((item) => Number(item.id) === Number(obj.id))
+            const findItem = cartItems.find((item) => item.parentId === sneaker.id)
             if (findItem) {
-                setCartItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
-                await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${findItem.id}`)
+                setCartItems((prev) => prev.filter((item) => item.parentId !== sneaker.id))
+                await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${findItem.id}`)
             } else {
-                setCartItems(prev => [...prev, obj])
-                const {data} = await axios.post(`http://localhost:8088/cart?userId=${user.id}`, obj)
-                setCartItems(prev => prev.map(item => {
-                    if (item.id === data.id) {
+                setCartItems((prev) => [...prev, sneaker])
+                const {data} = await axios.post(`https://ac15aa85171c1f7c.mokky.dev/cart`, sneaker)
+                setCartItems((prev) => prev.map(item => {
+                    if (item.parentId === data.parentId) {
                         return {
                             ...item,
                             id: data.id
@@ -87,20 +58,21 @@ function App() {
                 }))
             }
         } catch (error) {
-            alert('Ошибка при добавлении в корзину')
-            console.error(error)
+            console.log('Ошибка при добавлении в корзину')
         }
     }
-
-    const onAddToFavorite = async (obj) => {
+    const onAddToFavorite = async (sneaker) => {
         try {
-            const findItem = favorites.find(favObj => Number(favObj.id) === Number(obj.id))
+            const findItem = favorites.find(favObj => favObj.parentId === sneaker.id)
+            console.log(findItem)
             if (findItem) {
-                setFavorites((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)))
-                await axios.delete(`http://localhost:8088/favorites?userId=${user.id}&sneakerId=${obj.id}`)
+                setFavorites((prev) => prev.filter((item) => item.parentId !== sneaker.id))
+                console.log(favorites)
+                console.log(sneaker.id)
+                await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/favorites/${findItem.id}`)
             } else {
-                setFavorites(prev => [...prev, obj])
-                const {data} = await axios.post(`http://localhost:8088/favorites?userId=${user.id}`, obj)
+                setFavorites(prev => [...prev, sneaker])
+                const {data} = await axios.post(`https://ac15aa85171c1f7c.mokky.dev/favorites`, sneaker)
                 setFavorites(prev => prev.map(item => {
                     if (item.id === data.id) {
                         return {
@@ -112,45 +84,26 @@ function App() {
                 }))
             }
         } catch (error) {
-            alert('Не удалось добавить в избранное')
-            console.error(error)
+            console.log('Не удалось добавить в избранное')
         }
     }
+
     const onRemoveFromCart = async (id) => {
         try {
-            await axios.delete(`http://localhost:8088/cart?userId=${user.id}&sneakerId=${id}`)
-            setCartItems(prev => prev.filter(item => Number(item.id) !== Number(id)))
+            await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${id}`)
+            setCartItems((prev) => prev.filter((item) => item.id !== id))
         } catch (error) {
-            alert('Ошибка при удалении из корзины')
-            console.error(error)
-        }
-    }
-    const onRemoveItem = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8088/sneakers?sneakerId=${id}`)
-            setItems(prev => prev.filter(item => Number(item.id) !== Number(id)))
-        } catch (error) {
-            alert('Ошибка при удалении товара')
-            console.error(error)
-        }
-    }
-    const onEditItem = async (obj) => {
-        try {
-            await axios.put(`http://localhost:8088/sneakers?sneakerId=${obj.id}`, obj)
-            setItems(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
-        } catch (error) {
-            alert('Ошибка при редактировании товара')
-            console.error(error)
+            console.log('Ошибка при удалении из корзины')
         }
     }
     const onChangeSearchInput = (event) => {
         setSearchValue(event.target.value)
     }
     const isItemAdded = (id) => {
-        return cartItems.some(obj => Number(obj.id) === Number(id))
+        return cartItems.some((obj) => obj.parentId === id)
     }
     const isItemFavorited = (id) => {
-        return favorites.some(obj => Number(obj.id) === Number(id))
+        return favorites.some((obj) => obj.id === id)
     }
 
     return (
@@ -164,58 +117,33 @@ function App() {
             onAddToFavorite,
             setCartOpened,
             setCartItems,
-            onRemoveItem,
-            onEditItem,
-            user,
-            setUser,
             setItems
         }}>
             <div className="wrapper clear">
                 <Drawer items={cartItems} onClose={() => setCartOpened(false)} onRemove={onRemoveFromCart}
                         opened={cartOpened}/>
-                <Header onClickCart={() => setCartOpened(true)}/>
                 <Routes>
-                    <Route path="" element={
-                        <Home
-                            items={items}
-                            cartItems={cartItems}
-                            searchValue={searchValue}
-                            setSearchValue={setSearchValue}
-                            onChangeSearchInput={onChangeSearchInput}
-                            onAddToFavorite={onAddToFavorite}
-                            onAddToCart={onAddToCart}
-                            onRemoveItem={onRemoveItem}
-                            isLoading={isLoading}
-                        />
-                    }>
-                    </Route>
-                    <Route path="favorites" element={
-                        <Favorites/>
-                    }>
-                    </Route>
-                    <Route path="profile" element={
-                        <Profile/>
-                    }>
-                    </Route>
-                    <Route path="admin" element={
-                        <Admin/>
-                    }>
-                    </Route>
-                    <Route path="edit" element={
-                        <Edit/>
-                    }>
-                    </Route>
-                    <Route path="registration" element={
-                        <Registration/>
-                    }>
-                    </Route>
-                    <Route path="login" element={
-                        <Login/>
-                    }>
-                    </Route>
-                    <Route path="*" element={
-                        <NotFound/>
-                    }>
+                    <Route path="/" element={<MainLayout/>}>
+                        <Route path="" element={
+                            <Home
+                                items={items}
+                                cartItems={cartItems}
+                                searchValue={searchValue}
+                                setSearchValue={setSearchValue}
+                                onChangeSearchInput={onChangeSearchInput}
+                                onAddToFavorite={onAddToFavorite}
+                                onAddToCart={onAddToCart}
+                                isLoading={isLoading}
+                            />}/>
+                        <Route path="favorites" element={
+                            <Favorites/>
+                        }/>
+                        <Route path="profile" element={
+                            <Profile/>
+                        }/>
+                        <Route path="*" element={
+                            <NotFound/>
+                        }/>
                     </Route>
                 </Routes>
             </div>

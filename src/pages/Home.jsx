@@ -3,17 +3,15 @@ import btnRemoveImg from "../assets/img/btn-remove.svg"
 
 import Card from "../components/Card";
 import React from "react";
+import Footer from "../components/Footer";
 
-function Home({
-                  items,
-                  searchValue,
-                  setSearchValue,
-                  onChangeSearchInput,
-                  onAddToCart,
-                  onAddToFavorite,
-                  isLoading
-              }) {
-
+const Home = ({items,
+                        searchValue,
+                        setSearchValue,
+                        onChangeSearchInput,
+                        onAddToCart,
+                        onAddToFavorite,
+                        isLoading}) => {
     const renderItems = () => {
         const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
         return (isLoading ? [...Array(10)] : filteredItems).map((item, index) => (
@@ -41,6 +39,7 @@ function Home({
         <div className="d-flex flex-wrap">
             {renderItems()}
         </div>
+        <Footer/>
     </div>);
 }
 

@@ -30,15 +30,11 @@ function Header(props) {
                         <img className="mr-20 cu-p" width={18} height={18} src={heartImg} alt="Закладки"/>
                     </Link>
                 </li>
-                {
-                    localStorage.getItem('user') === null ?
-                        <Link to="/login">
-                            <img width={18} height={18} src={userImg} alt="Пользователь"/>
-                        </Link> :
-                        <Link to="/profile">
-                            <img width={18} height={18} src={userImg} alt="Пользователь"/>
-                        </Link>
-                }
+
+                <Link to="/profile">
+                    <img width={18} height={18} src={userImg} alt="Пользователь"/>
+                </Link>
+
                 <li>
                 </li>
             </ul>
