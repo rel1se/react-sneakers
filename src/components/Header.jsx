@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 import React from 'react'
 import {useCart} from "../hooks/useCart";
 
-function Header(props) {
+const Header = (props) => {
     const {totalPrice} = useCart()
     return (
         <header className="d-flex justify-between align-center p-40">

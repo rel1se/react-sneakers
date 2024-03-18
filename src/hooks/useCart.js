@@ -1,9 +1,18 @@
 import React from "react";
-import AppContext from "../context";
+import {useDispatch, useSelector} from "react-redux";
+import { selectCartItems, setCartItems } from '../redux/cartSlice';
 
 export const useCart = () => {
-    const {cartItems, setCartItems} = React.useContext(AppContext)
-    const totalPrice = cartItems.reduce((sum, obj) => sum + obj.price, 0)
+    const dispatch = useDispatch();
+    const cartItems = useSelector(selectCartItems);
 
-    return {cartItems, setCartItems, totalPrice}
-}
+    const totalPrice = useSelector(state => {
+        return state.cart.cartItems.reduce((total, item) => total + item.price, 0);
+    });
+
+    const updateCartItems = newCartItems => {
+        dispatch(setCartItems(newCartItems));
+    };
+
+    return { cartItems, updateCartItems, totalPrice };
+};

@@ -1,16 +1,29 @@
 import React from "react";
 import Card from "../components/Card";
-import AppContext from "../context";
 import InfoPage from "../components/InfoPage";
+import {useDispatch} from "react-redux";
+import {addToFavorite} from "../redux/favoriteSlice";
+import {useAutoAnimate} from "@formkit/auto-animate/react";
 
-function Favorites() {
-    const {favorites, onAddToFavorite} = React.useContext(AppContext)
+function Favorites({items}) {
+    const dispatch = useDispatch()
     const [isLoading, setLoading] = React.useState(true);
+    const [parent] = useAutoAnimate()
 
+    const mapItemToPayload = (item) => ({
+        id: item.id,
+        parentId: item.id,
+        title: item.title,
+        price: item.price,
+        imageUrl: item.imageUrl,
+    });
 
-    // Имитация загрузки данных
+    const onAddToFavorite = item => {
+        const payload = mapItemToPayload(item)
+        dispatch(addToFavorite(payload))
+    }
+
     React.useEffect(() => {
-
         setTimeout(() => {
             setLoading(false);
         }, 1000);
@@ -27,23 +40,21 @@ function Favorites() {
                         {
                             [...Array(10)].map((item, index) => (
                                 <Card key={index}
-
                                       loading={isLoading}
-
                                 />
                             ))
                         }
                     </div>
                 </div>
             ) : (
-                favorites.length > 0 ? (
+                items.length > 0 ? (
                     <div className="content p-40">
                         <div className="d-flex align-center justify-between mb-40">
                             <h1>Мои закладки</h1>
                         </div>
-                        <div className="d-flex flex-wrap">
-                            {favorites.map((item, index) => (
-                                <Card key={index} favorited={true} onFavorite={onAddToFavorite} {...item}/>
+                        <div className="d-flex flex-wrap" ref={parent}>
+                            {items.map((item, index) => (
+                                <Card key={index} favorited={true} onAddToFavorite={() => onAddToFavorite(item)} {...item}/>
                             ))}
                         </div>
                     </div>

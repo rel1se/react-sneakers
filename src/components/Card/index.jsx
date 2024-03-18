@@ -6,25 +6,30 @@ import btnPlus from "../../assets/img/btn-plus.svg"
 import React from "react";
 import ContentLoader from "react-content-loader";
 import styles from './Card.module.scss'
-import AppContext from "../../context";
+import {useSelector} from "react-redux";
+import {selectIsItemAdded} from "../../redux/cartSlice";
+import {selectIsItemFavorite} from "../../redux/favoriteSlice";
 
-function Card({
+
+const Card = ({
                   id,
                   title,
                   imageUrl,
                   price,
-                  onPlus,
-                  onFavorite,
-                  favorited = false,
+                  onAddToFavorite,
+                  onAddToCart,
                   loading = false
-              }) {
-    const {isItemAdded, isItemFavorited} = React.useContext(AppContext)
-    const obj = {id, parentId: id, title, price, imageUrl}
-    const onClickPlus = () => {
-        onPlus(obj)
-    }
-    const onClickFavorite = () => {
-        onFavorite(obj)
+              }) => {
+    const isItemFavorite = useSelector(state => selectIsItemFavorite(state, id))
+
+    const isItemAdded = useSelector(state => selectIsItemAdded(state, id))
+
+    const onClickPlus = (obj) => {
+        onAddToCart(obj);
+    };
+
+    const onClickFavorite = (obj) => {
+        onAddToFavorite(obj)
     }
     return (
         <div className={styles.card}>
@@ -45,18 +50,11 @@ function Card({
                         </ContentLoader>
                     ) :
                     <>
-                        {onFavorite ?
-                            <img className={styles.favorite}
-                                 onClick={onClickFavorite}
-                                 src={isItemFavorited(id) ? likedImage : unlikedImage}
-                                 alt="Unliked"/> : <></>
-                        }
-                        {/*{isAdmin &&*/}
-                        {/*    <img className={styles.favorite}*/}
-                        {/*         onClick={() => onRemoveItem(obj.id)}*/}
-                        {/*         src={btnRemove}*/}
-                        {/*         alt="Remove"/>*/}
-                        {/*}*/}
+
+                        <img className={styles.favorite}
+                             onClick={onClickFavorite}
+                             src={isItemFavorite ? likedImage : unlikedImage}
+                             alt="Unliked"/> : <></>
                         <img width="100%" height={135} src={imageUrl} alt="Sneakers"/>
                         <h5>{title}</h5>
                         <div className="d-flex justify-between align-center">
@@ -64,19 +62,12 @@ function Card({
                                 <p>Цена: </p>
                                 <b>{price} руб.</b>
                             </div>
-                            {onPlus ? (
-                                <img
-                                    className={styles.plus}
-                                    onClick={onClickPlus}
-                                    src={isItemAdded(id) ? btnChecked : btnPlus}
-                                    alt="Plus"
-                                />
-                            ) : <></>}
-                            {/*{isAdmin &&*/}
-                            {/*    <Link to={`/edit`} state={{ item: obj }}>*/}
-                            {/*        <img className={styles.edit} src={editImg} alt="Edit" />*/}
-                            {/*    </Link>*/}
-                            {/*}*/}
+                            <img
+                                className={styles.plus}
+                                onClick={onClickPlus}
+                                src={isItemAdded ? btnChecked : btnPlus}
+                                alt="Plus"
+                            />
                         </div>
                     </>
             }
