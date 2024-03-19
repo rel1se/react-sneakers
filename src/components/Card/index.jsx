@@ -20,14 +20,13 @@ const Card = ({
                   onAddToCart,
                   loading = false
               }) => {
-    const isItemFavorite = useSelector(state => selectIsItemFavorite(state, id))
+    const  isItemFavorited = useSelector(state => selectIsItemFavorite(state, id))
 
     const isItemAdded = useSelector(state => selectIsItemAdded(state, id))
 
     const onClickPlus = (obj) => {
         onAddToCart(obj);
     };
-
     const onClickFavorite = (obj) => {
         onAddToFavorite(obj)
     }
@@ -53,8 +52,8 @@ const Card = ({
 
                         <img className={styles.favorite}
                              onClick={onClickFavorite}
-                             src={isItemFavorite ? likedImage : unlikedImage}
-                             alt="Unliked"/> : <></>
+                             src={isItemFavorited ? likedImage : unlikedImage}
+                             alt="Unliked"/>
                         <img width="100%" height={135} src={imageUrl} alt="Sneakers"/>
                         <h5>{title}</h5>
                         <div className="d-flex justify-between align-center">

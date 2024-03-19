@@ -26,32 +26,61 @@ export const addToFavorite = createAsyncThunk(
     }
 )
 
+
+// const favoriteSlice = createSlice({
+//     name: 'favorite',
+//     initialState,
+//     reducers: {
+//         setFavorites: (state, action) => {
+//             state.favoriteItems = action.payload
+//         }
+//     },
+//     extraReducers: builder => {
+//         builder.addCase(addToFavorite.fulfilled, (state, action) => {
+//             const {sneakerId, action: addAction} = action.payload
+//             if (addAction === 'remove'){
+//                 state.favoriteItems =  state.favoriteItems.filter(item => item.id !== sneakerId)
+//             } else if (addAction === 'add'){
+//                 state.favoriteItems.push(action.payload.sneaker)
+//             }
+//         })
+//             .addMatcher(
+//                 action => action.type.endsWith('/rejected'),
+//                 (state, action) => {
+//                     state.status = 'failed';
+//                     state.error = action.error.message;
+//                 }
+//             )
+//     }
+// })
+
 const favoriteSlice = createSlice({
     name: 'favorite',
     initialState,
     reducers: {
         setFavorites: (state, action) => {
-            state.favoriteItems = action.payload
+            state.favoriteItems = action.payload;
         }
     },
-    extraReducers: builder => {
-        builder.addCase(addToFavorite.fulfilled, (state, action) => {
-            const {sneakerId, action: addAction} = action.payload
-            if (addAction === 'remove'){
-                state.favoriteItems =  state.favoriteItems.filter(item => item.parentId !== sneakerId)
-            } else if (addAction === 'add'){
-                state.favoriteItems.push(action.payload.sneaker)
-            }
-        })
+    extraReducers: (builder) => {
+        builder
+            .addCase(addToFavorite.fulfilled, (state, action) => {
+                const { sneakerId, action: addAction, sneaker } = action.payload; // Добавляем sneaker, чтобы использовать его при добавлении
+                if (addAction === 'remove') {
+                    state.favoriteItems = state.favoriteItems.filter(item => item.parentId !== sneakerId); // Используем sneakerId для удаления элемента
+                } else if (addAction === 'add') {
+                    state.favoriteItems.push(sneaker); // Добавляем sneaker в favoriteItems
+                }
+            })
             .addMatcher(
                 action => action.type.endsWith('/rejected'),
                 (state, action) => {
                     state.status = 'failed';
                     state.error = action.error.message;
                 }
-            )
+            );
     }
-})
+});
 
 
 export default favoriteSlice.reducer;
@@ -59,6 +88,7 @@ export default favoriteSlice.reducer;
 export const {setFavorites} = favoriteSlice.actions;
 
 export const selectFavoriteItems = state => state.favorite.favoriteItems;
-export const selectIsItemFavorite = (state, itemId) => {
+export const selectIsItemFavorite = (state, itemId) =>
     state.favorite.favoriteItems.some(item => item.parentId === itemId);
-}
+
+

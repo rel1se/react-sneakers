@@ -3,10 +3,10 @@ import btnRemoveImg from "../assets/img/btn-remove.svg";
 import Card from "../components/Card";
 import React from "react";
 import Footer from "../components/Footer";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/cartSlice";
+import {useDispatch} from "react-redux";
+import {addToCart} from "../redux/cartSlice";
 import {addToFavorite} from "../redux/favoriteSlice";
-import { useAutoAnimate } from '@formkit/auto-animate/react'
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 const Home = ({
                   items,
@@ -59,16 +59,16 @@ const Home = ({
             <div className="d-flex align-center justify-between mb-40">
                 <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : 'Все кроссовки'}</h1>
                 <div className="searchBlock d-flex">
-                    <img src={searchImg} alt="Search" />
+                    <img src={searchImg} alt="Search"/>
                     {searchValue &&
-                        <img onClick={() => setSearchValue('')} className="clear cu-p" src={btnRemoveImg} alt="Clear" />}
-                    <input onChange={onChangeSearchInput} value={searchValue} placeholder="Поиск" />
+                        <img onClick={() => setSearchValue('')} className="clear cu-p" src={btnRemoveImg} alt="Clear"/>}
+                    <input onChange={onChangeSearchInput} value={searchValue} placeholder="Поиск"/>
                 </div>
             </div>
             <div className="d-flex flex-wrap " ref={parent}>
                 {renderItems()}
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 };

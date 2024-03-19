@@ -53,14 +53,19 @@ function Favorites({items}) {
                             <h1>Мои закладки</h1>
                         </div>
                         <div className="d-flex flex-wrap" ref={parent}>
-                            {items.map((item, index) => (
-                                <Card key={index} favorited={true} onAddToFavorite={() => onAddToFavorite(item)} {...item}/>
-                            ))}
+                            {items.map((item) => {
+                                const newItem = {...item, id: item.parentId};
+                                return (
+                                    <Card key={newItem.id} onAddToFavorite={() => onAddToFavorite(newItem)} {...newItem} />
+                                );
+                                }
+                            )}
                         </div>
                     </div>
                 ) : (
                     <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "6rem"}}>
-                        <InfoPage imageUrl="/img/emoji-1.png" title="Закладок нет" description="Вы ничего не добавляли в закладки"/>
+                        <InfoPage imageUrl="/img/emoji-1.png" title="Закладок нет"
+                                  description="Вы ничего не добавляли в закладки"/>
                     </div>
                 )
             )}
