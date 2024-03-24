@@ -12,7 +12,7 @@ const Profile: React.FC = () => {
     React.useEffect(() => {
         (async () => {
             try {
-                const { data } = await axios.get(`https://ac15aa85171c1f7c.mokky.dev/orders`);
+                const {data} = await axios.get(`https://ac15aa85171c1f7c.mokky.dev/orders`);
                 setOrders(data);
                 setIsLoading(false);
             } catch (error) {
@@ -37,23 +37,34 @@ const Profile: React.FC = () => {
                 </div>
             ) : (
                 <div className="content p-40">
-                    <div className="d-flex align-center justify-between mb-40">
-                        <h1>Мои заказы</h1>
-                    </div>
-                    {orders.length > 0 ? (
-                        orders.map((order: any, orderIndex: number) => (
-                            <div key={orderIndex}>
-                                <h2>Заказ №{orderIndex + 1}</h2>
-                                <div className="d-flex flex-wrap">
-                                    {order.sneakers.map((item: any, itemIndex: number) => (
-                                        <Card key={itemIndex} loading={isLoading} {...item} />
-                                    ))}
+                    {
+                        orders.length > 0 ? (
+                            <>
+                                <div className="d-flex align-center justify-between mb-40">
+                                    <h1>Мои заказы</h1>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <InfoPage imageUrl={completeOrder} description="Ваши заказы скоро будут переданы курьерской доставке" title="Заказы оформлены!" />
-                    )}
+                                {orders.map((order: any, orderIndex: number) => (
+                                        <div key={orderIndex}>
+                                            <h2>Заказ №{orderIndex + 1}</h2>
+                                            <div className="d-flex flex-wrap">
+                                                {order.sneakers.map((item: any, itemIndex: number) => (
+                                                    <Card key={itemIndex} loading={isLoading} {...item} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                        ) : (<div
+                            style={{
+                                marginTop: '6rem',
+                                display: 'flex',
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                            <InfoPage imageUrl={emojiImg} description="Вы нищеброд? Оформите хотя бы один заказ"
+                                      title="Заказов нет :("/>
+                        </div>)
+                    }
                 </div>
             )}
         </>
