@@ -1,5 +1,7 @@
 import btnRemove from "../../assets/img/btn-remove.svg"
 import arrowImg from "../../assets/img/arrow.svg"
+import completeCartImg from "../../assets/img/complete-order.jpg"
+import emptyCartImg from "../../assets/img/empty-cart.jpg"
 
 import styles from './Drawer.module.scss'
 
@@ -7,36 +9,28 @@ import React from "react";
 import {useCart} from "../../hooks/useCart";
 import axios from "axios";
 import InfoPage from "../InfoPage";
-import {useDispatch, useSelector} from "react-redux";
-import {removeFromCart} from "../../redux/cartSlice";
+import {useDispatch} from "react-redux";
+import {removeFromCart} from "../../redux/cart/cartSlice";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const Drawer = ({onClose, items = [], opened}) => {
-    const {cart, setCartItems, totalPrice} = useCart()
+const Drawer = ({onClose, opened}) => {
+    const {cartItems, updateCartItems, totalPrice} = useCart()
     const [orderId, setOrderId] = React.useState(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [isOrderComplete, setIsOrderComplete] = React.useState(false)
     const dispatch = useDispatch()
-    const [parent, enableAnimations] = useAutoAnimate()
+    const [parent] = useAutoAnimate()
     const onClickOrder = async () => {
         try {
             setIsLoading(true)
-            const {data} = await axios.post(`https://ac15aa85171c1f7c.mokky.dev/orders`,
-                {sneakers: cart})
-            console.log(data)
-            await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart`, [])
+            const {data} = await axios.post('https://ac15aa85171c1f7c.mokky.dev/orders',
+                {sneakers: cartItems})
+            await axios.patch(`https://ac15aa85171c1f7c.mokky.dev/cart`, [])
             setOrderId(data.id)
             setIsOrderComplete(true)
-            setCartItems([])
-            for (let i = 0; i < cart.length; i++) {
-                const item = cart[i]
-                await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${item.id}`)
-                await delay(500)
-            }
+            updateCartItems([])
         } catch (error) {
-            alert("Не удалось создать заказ :(")
+            console.error(error)
         }
         setIsLoading(false)
     }
@@ -52,10 +46,10 @@ const Drawer = ({onClose, items = [], opened}) => {
                     <img onClick={onClose} className="removeBtn cu-p" src={btnRemove} alt="Remove"/>
                 </h2>
                 {
-                    items.length > 0 ?
+                    cartItems.length > 0 ?
                         <div className="d-flex flex-column flex">
                             <div className={styles.items} ref={parent}>
-                                {items.map((obj) => (
+                                {cartItems.map((obj) => (
                                     <div key={obj.id} className="cartItem d-flex align-center mb-20">
                                         <div style={{backgroundImage: `url(${obj.imageUrl})`}}
                                              className={styles.cartItemImg}></div>
@@ -89,13 +83,12 @@ const Drawer = ({onClose, items = [], opened}) => {
                         </div> : (
                             <div style={{display: "flex", justifyContent: 'center', alignItems: 'center', marginTop: "16rem"}}>
                                 {isOrderComplete ?
-
                                     <InfoPage
-                                        imageUrl='/img/complete-cart.jpg'
+                                        imageUrl={completeCartImg}
                                         title="Заказ оформлен"
                                         description={`Ваш заказ №${orderId} скоро будет передан курьерской доставке`}/> :
                                     <InfoPage
-                                        imageUrl='/img/empty-cart.jpg'
+                                        imageUrl={emptyCartImg}
                                         title="Корзина пустая"
                                         description={`Добавьте хотя бы один товар, чтобы сделать заказ`}
                                     />}

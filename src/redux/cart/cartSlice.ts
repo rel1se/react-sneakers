@@ -1,17 +1,23 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {AsyncThunk, createAsyncThunk, createSlice, isRejectedWithValue, PayloadAction} from '@reduxjs/toolkit'
 import axios from "axios";
+import {CartItem, CartSliceState} from "./types";
+import {AppDispatch, RootState} from "../store";
 
-
-const initialState = {
+const initialState: CartSliceState = {
     cartItems: [],
     status: 'loading',
     error: null
 }
-export const addToCart = createAsyncThunk(
+
+
+
+export const addToCart = createAsyncThunk
+(
     'cart/addToCart',
-    async (sneaker, thunkAPI) => {
+    async (sneaker: CartItem, thunkAPI) => {
         try {
-            const findItem = thunkAPI.getState().cart.cartItems.find(item => item.parentId === sneaker.id);
+            const state = thunkAPI.getState() as RootState
+            const findItem = state.cart.cartItems.find((item: CartItem) => item.parentId === sneaker.id);
             if (findItem) {
                 await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${findItem.id}`);
                 return {sneakerId: sneaker.id, action: 'remove'};
@@ -19,20 +25,28 @@ export const addToCart = createAsyncThunk(
                 const {data} = await axios.post(`https://ac15aa85171c1f7c.mokky.dev/cart`, sneaker);
                 return {sneaker: data, action: 'add'};
             }
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.response.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)){
+                return thunkAPI.rejectWithValue(error.response?.data)
+            } else {
+                throw error;
+            }
         }
     }
 )
 
 export const removeFromCart = createAsyncThunk(
     'cart/removeFromCart',
-    async (id, thunkAPI) => {
+    async (id: number, thunkAPI) => {
         try {
             await axios.delete(`https://ac15aa85171c1f7c.mokky.dev/cart/${id}`);
             return id;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.response.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)){
+                return thunkAPI.rejectWithValue(error.response?.data)
+            } else {
+                throw error;
+            }
         }
     }
 );
@@ -41,7 +55,7 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        setCartItems: (state, action) => {
+        setCartItems: (state, action: PayloadAction<CartItem[]>) => {
             state.cartItems = action.payload;
         }
     },
@@ -58,10 +72,10 @@ const cartSlice = createSlice({
                 state.cartItems = state.cartItems.filter(item => item.id !== action.payload);
             })
             .addMatcher(
-                action => action.type.endsWith('/rejected'),
+                isRejectedWithValue,
                 (state, action) => {
                     state.status = 'failed';
-                    state.error = action.error.message;
+                    state.error = action.payload;
                 }
             );
     }
@@ -70,6 +84,3 @@ const cartSlice = createSlice({
 
 export default cartSlice.reducer;
 export const { setCartItems } = cartSlice.actions;
-export const selectCartItems = state => state.cart.cartItems;
-export const selectIsItemAdded = (state, itemId) =>
-    state.cart.cartItems.some(item => item.parentId === itemId);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ChangeEvent, useState} from 'react'
 import {Route, Routes} from 'react-router-dom'
 import axios from "axios";
 import Drawer from "./components/Drawer";
@@ -9,25 +9,32 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./layouts/MainLayout";
 import {useDispatch, useSelector} from "react-redux";
-import {setCartItems} from "./redux/cartSlice";
-import {setFavorites} from "./redux/favoriteSlice";
+import {setCartItems} from "./redux/cart/cartSlice";
+import {setFavorites} from "./redux/favorites/favoriteSlice";
+import {RootState} from "./redux/store";
 
 
-function App() {
-    const [items, setItems] = React.useState([])
-    const [cartOpened, setCartOpened] = React.useState(false)
-    const [searchValue, setSearchValue] = React.useState('')
-    const [isLoading, setIsLoading] = React.useState(true)
-    const cart = useSelector((state) => state.cart.cartItems)
-    const favorites = useSelector(state => state.favorite.favoriteItems)
+export type Sneaker = {
+    id: number,
+    title: string,
+    price: number,
+    imageUrl: string
+}
+
+const App: React.FC = () => {
+    const [items, setItems] = React.useState<Sneaker[]>([])
+    const [cartOpened, setCartOpened] = React.useState<Boolean>(false)
+    const [searchValue, setSearchValue] = React.useState<string>('')
+    const [isLoading, setIsLoading] = React.useState<Boolean>(true)
+    const [sort, setSort] = useState<string>('title')
+    const cart = useSelector((state: RootState) => state.cart.cartItems)
+    const favorites = useSelector((state:RootState) => state.favorite.favoriteItems)
     const dispatch = useDispatch();
-
-
     React.useEffect(() => {
         const fetchData = async () => {
             try {
                 const [itemsResponse, cartResponse, favoritesResponse] = await Promise.all([
-                    axios.get('https://ac15aa85171c1f7c.mokky.dev/sneakers'),
+                    axios.get(`https://ac15aa85171c1f7c.mokky.dev/sneakers?sortBy=${sort}`),
                     axios.get(`https://ac15aa85171c1f7c.mokky.dev/cart`),
                     axios.get('https://ac15aa85171c1f7c.mokky.dev/favorites')
                 ]);
@@ -40,8 +47,8 @@ function App() {
             }
         };
         fetchData()
-    }, [])
-    const onChangeSearchInput = (event) => {
+    }, [dispatch, sort])
+    const onChangeSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchValue(event.target.value)
     }
 
@@ -49,11 +56,10 @@ function App() {
     return (
         <AppContext.Provider value={{
             items,
-            setCartOpened,
-            setItems
+            setCartOpened
         }}>
             <div className="wrapper clear">
-                <Drawer items={cart} onClose={() => setCartOpened(false)}
+                <Drawer onClose={() => setCartOpened(false)}
                         opened={cartOpened}/>
                 <Routes>
                     <Route path="/" element={<MainLayout/>}>
@@ -64,6 +70,7 @@ function App() {
                                 setSearchValue={setSearchValue}
                                 onChangeSearchInput={onChangeSearchInput}
                                 isLoading={isLoading}
+                                setSort={setSort}
                             />}/>
                         <Route path="favorites" element={
                             <Favorites items={favorites}/>

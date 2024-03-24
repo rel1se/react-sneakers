@@ -100,3 +100,20 @@ header {
         transform: translateY(-5px);
     }
 }
+
+
+select {
+    padding: 0.5rem 0.75rem;
+    margin-right: 1rem;
+    border: 1px solid #f3f3f3;
+    font-size: 16px;
+    border-radius: 20px;
+    color: #6b6b6b;
+    width: 200px;
+    height: 46px;
+    border-radius: 0.375rem;
+    outline: none;
+    @media (max-width: 1000px){
+        width: 100px;
+    }
+}

@@ -3,14 +3,25 @@ import unlikedImage from "../../assets/img/unliked.jpg"
 import btnChecked from "../../assets/img/btn-checked.svg"
 import btnPlus from "../../assets/img/btn-plus.svg"
 
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import ContentLoader from "react-content-loader";
 import styles from './Card.module.scss'
 import {useSelector} from "react-redux";
-import {selectIsItemAdded} from "../../redux/cartSlice";
-import {selectIsItemFavorite} from "../../redux/favoriteSlice";
+import {selectIsItemAdded} from "../../redux/cart/selectors";
+import {selectIsItemFavorite} from "../../redux/favorites/selectors";
+import {CartItem} from "../../redux/cart/types";
+import {FavoriteItem} from "../../redux/favorites/types";
+import {RootState} from "../../redux/store";
 
-
+// type CardProps = {
+//     id: number,
+//     title: string,
+//     imageUrl: string,
+//     price: number,
+//     onAddToFavorite: (obj: FavoriteItem) => MouseEventHandler<HTMLImageElement>,
+//     onAddToCart: (obj: CartItem) => MouseEventHandler<HTMLImageElement>,
+//     loading: boolean
+// }
 const Card = ({
                   id,
                   title,
@@ -20,11 +31,11 @@ const Card = ({
                   onAddToCart,
                   loading = false
               }) => {
-    const  isItemFavorited = useSelector(state => selectIsItemFavorite(state, id))
+    const  isItemFavorited = useSelector((state) => selectIsItemFavorite(state, id))
 
-    const isItemAdded = useSelector(state => selectIsItemAdded(state, id))
+    const isItemAdded = useSelector((state) => selectIsItemAdded(state, id))
 
-    const onClickPlus = (obj) => {
+    const onClickPlus =  (obj) => {
         onAddToCart(obj);
     };
     const onClickFavorite = (obj) => {

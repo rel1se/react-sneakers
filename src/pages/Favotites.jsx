@@ -1,8 +1,11 @@
 import React from "react";
 import Card from "../components/Card";
 import InfoPage from "../components/InfoPage";
+import emojiImg from "../assets/img/emoji-1.png"
+
+
 import {useDispatch} from "react-redux";
-import {addToFavorite} from "../redux/favoriteSlice";
+import {addToFavorite} from "../redux/favorites/favoriteSlice";
 import {useAutoAnimate} from "@formkit/auto-animate/react";
 
 function Favorites({items}) {
@@ -64,7 +67,7 @@ function Favorites({items}) {
                     </div>
                 ) : (
                     <div style={{display: "flex", justifyContent: "center", alignItems: "center", marginTop: "6rem"}}>
-                        <InfoPage imageUrl="/img/emoji-1.png" title="Закладок нет"
+                        <InfoPage imageUrl={emojiImg} title="Закладок нет"
                                   description="Вы ничего не добавляли в закладки"/>
                     </div>
                 )
