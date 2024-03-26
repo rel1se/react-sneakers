@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {addToCart} from "../redux/cart/cartSlice";
 import {addToFavorite} from "../redux/favorites/favoriteSlice";
 import {useAutoAnimate} from '@formkit/auto-animate/react'
+import Slider from "../components/Slider";
 
 
 // type HomeProps = {
@@ -71,6 +72,7 @@ const Home = ({
 
     return (
         <div className="content p-40">
+            <Slider/>
             <div className="d-flex align-center justify-between mb-40">
                 <h1>{searchValue ? `Поиск по запросу: "${searchValue}"` : 'Все кроссовки'}</h1>
                 <div className="d-flex align-end justify-between mr-5 ml-10">
@@ -88,6 +90,7 @@ const Home = ({
                     </div>
                 </div>
             </div>
+
             <div className="d-flex flex-wrap " ref={parent}>
                 {renderItems()}
             </div>

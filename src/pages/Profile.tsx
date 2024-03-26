@@ -3,7 +3,6 @@ import Card from "../components/Card";
 import axios from "axios";
 import InfoPage from "../components/InfoPage";
 import emojiImg from "../assets/img/emoji-2.png";
-import completeOrder from "../assets/img/complete-order.jpg";
 
 const Profile: React.FC = () => {
     const [orders, setOrders] = React.useState([]);

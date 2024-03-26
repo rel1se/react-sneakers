@@ -117,3 +117,26 @@ select {
         width: 100px;
     }
 }
+
+
+/* Слайдер */
+
+.slideshow {
+    margin-bottom: 40px;
+    overflow: hidden;
+    max-width: 1280px;
+}
+
+.slideshowSlider {
+    white-space: nowrap;
+    transition: ease 1000ms;
+}
+
+.slide {
+    display: inline-block;
+    height: 500px;
+    width: 100%;
+    border-radius: 20px;
+}
+
+
